@@ -1,9 +1,9 @@
 import { TagEntity } from './../tag/tag.entity';
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import { UserEntity } from './../user/user.entity';
 
 
-@Entity()
+@Entity('notes')
 export class NoteEntity{
 
     @PrimaryGeneratedColumn('uuid')
@@ -16,8 +16,9 @@ export class NoteEntity{
     description:string
 
     @ManyToMany(()=>TagEntity,(tag)=>tag.notes)
+    @JoinTable()
     tags:TagEntity[]
 
-    @ManyToOne(()=>UserEntity,user=>user.notes)
+    @ManyToOne(()=>UserEntity,user=>user.notes,{onDelete:'CASCADE'})
     user:UserEntity
 }

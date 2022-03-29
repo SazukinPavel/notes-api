@@ -7,6 +7,7 @@ import { UserEntity } from './user.entity';
 import {} from 'jsonwebtoken'
 import { sign } from 'jsonwebtoken';
 import { compare } from 'bcryptjs';
+import { SECRET_KEY } from 'src/config';
 
 @Injectable()
 export class UserService {
@@ -45,6 +46,10 @@ export class UserService {
         }
     }
 
+    deleteUser(id:string){
+        return this.userRepo.delete(id)
+    }
+
     private findUserByNameAndEmail(name:string,email:string){
         return Promise.all([this.findUserByName(name),this.findUserByEmail(email)])
     }
@@ -59,7 +64,7 @@ export class UserService {
 
     private generateToken(user:UserEntity){
         return sign(
-            {id:user.id,username:user.username,email:user.email},'95241234'
+            {id:user.id,username:user.username,email:user.email},SECRET_KEY
         )
     }
 

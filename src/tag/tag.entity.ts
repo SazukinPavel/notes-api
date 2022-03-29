@@ -1,7 +1,7 @@
 import { NoteEntity } from "src/note/note.entity"
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
 
-@Entity()
+@Entity('tags')
 export class TagEntity{
 
     @PrimaryGeneratedColumn('uuid')
@@ -9,9 +9,6 @@ export class TagEntity{
 
     @Column({unique:true})
     name:string
-
-    @Column()
-    count:number
 
     @ManyToMany(()=>NoteEntity,note=>note.tags)
     notes:NoteEntity[]
