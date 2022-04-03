@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { RegisterUserDto } from './dto/RegisterUser.dto';
 import { LoginUserDto } from './dto/LoginUser.dto';
 import { Body, Controller, Delete, Get, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { AuthGuard } from './guards/auth.guard';
+import { AuthGuard } from '../guards/auth.guard';
 import { User } from 'src/decorators/user.decorator';
 
 @Controller('users')

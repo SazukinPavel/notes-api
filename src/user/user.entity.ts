@@ -2,12 +2,14 @@ import { hash } from "bcryptjs";
 import { NoteEntity } from "src/note/note.entity";
 import { BeforeInsert, Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-
-@Entity()
+@Entity('users')
 export class UserEntity{
 
     @PrimaryGeneratedColumn('uuid')
     id:string
+
+    @Column()
+    role:string
 
     @Column({unique:true})
     username:string

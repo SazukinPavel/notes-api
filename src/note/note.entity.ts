@@ -1,5 +1,5 @@
 import { TagEntity } from './../tag/tag.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import { UserEntity } from './../user/user.entity';
 
 
@@ -15,10 +15,11 @@ export class NoteEntity{
     @Column()
     description:string
 
-    @ManyToMany(()=>TagEntity,(tag)=>tag.notes)
+    @ManyToMany(()=>TagEntity,(tag)=>tag.notes,{cascade:true})
     @JoinTable()
     tags:TagEntity[]
 
-    @ManyToOne(()=>UserEntity,user=>user.notes,{onDelete:'CASCADE'})
+    @ManyToOne(()=>UserEntity,user=>user.notes)
+    @JoinColumn()
     user:UserEntity
 }

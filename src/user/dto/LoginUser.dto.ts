@@ -3,7 +3,7 @@ import { IsNotEmpty } from "class-validator"
 export class LoginUserDto{
 
     @IsNotEmpty()
-    nameOrEmail:string
+    usernameOrEmail:string
     
     @IsNotEmpty()
     password:string

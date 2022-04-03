@@ -4,7 +4,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
-import {} from 'jsonwebtoken'
 import { sign } from 'jsonwebtoken';
 import { compare } from 'bcryptjs';
 import { SECRET_KEY } from 'src/config';
@@ -20,13 +19,14 @@ export class UserService {
 
     async register(dto:RegisterUserDto){
         await this.checkFreeNameAndEmail(dto.username,dto.email)
-        const user=this.userRepo.create({...dto})
+        const user=this.userRepo.create({...dto,role:'USER'})
         const createdUser=await this.createUser(user)
-        return {token:this.generateToken(createdUser)}
+        delete user.password
+        return {token:this.generateToken(createdUser),user}
     }
 
     async login(dto:LoginUserDto){
-        const [userByName,userByEmail]=await this.findUserByNameAndEmail(dto.nameOrEmail,dto.nameOrEmail)
+        const [userByName,userByEmail]=await this.findUserByNameAndEmail(dto.usernameOrEmail,dto.usernameOrEmail)
         if(!userByEmail && !userByName){
             throw new HttpException('Такого пользователя нет',HttpStatus.UNPROCESSABLE_ENTITY)
         }
@@ -35,7 +35,8 @@ export class UserService {
         if(!isPasswordEquail){
             throw new HttpException('Не правильный пароль',HttpStatus.UNPROCESSABLE_ENTITY)
         }
-        return {token:this.generateToken(user)}
+        delete user.password
+        return {token:this.generateToken(user),user}
     }
 
     private async checkFreeNameAndEmail(name:string,email:string){
@@ -60,6 +61,10 @@ export class UserService {
 
     private findUserByEmail(email:string){
         return this.userRepo.findOne({where:{email}})
+    }
+
+    findUserByIdNameEmail(id:string,name:string,email:string){
+        return this.userRepo.findOne({where:{id,username:name,email}})
     }
 
     private generateToken(user:UserEntity){
